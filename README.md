@@ -39,7 +39,7 @@ Step 3: Run the Project with Streamlit
         To run the YtAPiproject.py using a virtual environment, first, open the command prompt in the project directory. Create a virtual environment using python -m venv venv and activate it with .\venv\Scripts\activate (Windows) or source venv/bin/activate (macOS/Linux). Install the required libraries using pip install -r requirements.txt or manually with pip install streamlit google-api-python-client pymongo mysql-connector-python pandas. Then, run the app with streamlit run python.py to open the UI in a web browser. Finally, deactivate the environment with deactivate when done.
 
 # Result
-    This project is designed to harvest YouTube data using the YouTube API, store it in MongoDB, and convert it into SQL format for analysis. It leverages Streamlit, Python, and various ETL techniques. The project showcases expertise in Python, MongoDB, SQL, API integration, and data management tools. 
+    - This project is designed to harvest YouTube data using the YouTube API, store it in MongoDB, and convert it into SQL format for analysis. It leverages Streamlit, Python, and various ETL techniques. The project showcases expertise in Python, MongoDB, SQL, API integration, and data management tools. 
   -
     
   
