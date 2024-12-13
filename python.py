@@ -6,6 +6,9 @@ import pandas as pd
 import streamlit as st
 import json
 import pymongo
+import warnings
+warnings.filterwarnings("ignore", message=".*missing ScriptRunContext.*")
+
 
 def fun():
     api_key = "AIzaSyCw34pbSpScIHWbyoiZPzEcXMzItfmdfmM"
@@ -165,13 +168,12 @@ def get_info(id):
 
 
 # MySQL connection
-mydb = mysql.connector.connect(host="localhost", user="root", password="shakthi07", database="youtube1")
-cursor = mydb.cursor()
+
 
 # Creating channel table
 # table for channels,playlist,videos,commentt.....
-def channel_table(ch):   
-    mydb=mysql.connector.connect(host="localhost",user="root",password="shakthi07",database="youtube")
+def channel_table(ch): 
+    mydb = mysql.connector.connect(host="localhost", user="root", password="shakthi07", database="youtube1")
     cursor = mydb.cursor()
     try:   
         q='''create table if not exists channel(Channel_name varchar(50),Channel_id varchar(100) primary key,
@@ -212,7 +214,7 @@ def channel_table(ch):
             return n
             
 def playlist_table(ch):
-    mydb=mysql.connector.connect(host="localhost",user="root",password="shakthi07",database="youtube")
+    mydb = mysql.connector.connect(host="localhost", user="root", password="shakthi07", database="youtube1")
     cursor = mydb.cursor()
     try:   
         q='''create table if not exists playlist(Channel_name varchar(50),Channel_id varchar(100) ,
@@ -246,6 +248,8 @@ def playlist_table(ch):
 
 # Creating video table
 def video_table(ch):
+    mydb = mysql.connector.connect(host="localhost", user="root", password="shakthi07", database="youtube1")
+    cursor = mydb.cursor()
     try:
         q = '''CREATE TABLE IF NOT EXISTS video(
             Channel_name VARCHAR(50),
@@ -280,11 +284,11 @@ def video_table(ch):
 
     for index, row in df2.iterrows():
         q = '''INSERT INTO video(Channel_name, Channel_id, Video_id, Tittle, Tag, Thumbnail, Des,
-                Pub_date, Duration, Views, Comments, Fav_count, Defination, Caption_status)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'''
+                Pub_date, Duration, Views,likes, Comments, Fav_count, Defination, Caption_status)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s)'''
         values = (
             row['channel_name'], row['channel_id'], row['video_id'], row['tittle'], json.dumps(row['tag']),
-            row['thumbnail'], row['des'], row['pub_date'], row['duration'], row['views'], row['comments'],
+            row['thumbnail'], row['des'], row['pub_date'], row['duration'], row['views'],row["likes"], row['comments'],
             row['fav'], row['defination'], row['caption_status']
         )
         try:
@@ -295,6 +299,8 @@ def video_table(ch):
 
 # Creating comments table
 def comments_table(ch):
+    mydb = mysql.connector.connect(host="localhost", user="root", password="shakthi07", database="youtube1")
+    cursor = mydb.cursor()
     try:
         q = '''CREATE TABLE IF NOT EXISTS comments(
             Comment_id VARCHAR(50) PRIMARY KEY,
@@ -462,9 +468,29 @@ elif question=="4. comments in each videos":
     df4=pd.DataFrame(t4,columns=["no of comments","videotitle"])
     st.write(df4)
 
+elif question =="5. Videos with higest likes":
+    query6 = '''SELECT tittle AS video_title, channel_name AS channel_name, likes AS total_likes
+                FROM video
+                WHERE likes IS NOT NULL
+                ORDER BY likes DESC LIMIT 10'''
+    cursor.execute(query6)
+    t5 = cursor.fetchall()
+    df6 = pd.DataFrame(t5, columns=["video title", "channel name", "total likes"])
+    st.write(df6)
+
+elif question == "6. likes of all videos":
+    query6 = '''SELECT tittle AS video_title, likes AS total_likes
+                FROM video
+                WHERE likes IS NOT NULL'''
+    cursor.execute(query6)
+    t6 = cursor.fetchall()
+    df6 = pd.DataFrame(t6, columns=["video title", "total likes"])
+    st.write(df6)
+
 elif question=="7. views of each channel":
     query7='''select Channel_name as channelname ,views as totalviews from channel'''
     cursor.execute(query7)
+    
     t7=cursor.fetchall()
     df7=pd.DataFrame(t7,columns=["channel name","totalviews"])
     st.write(df7)
@@ -473,6 +499,7 @@ elif question=="8. videos published in the year of 2022":
     query8='''select tittle as video_title,pub_date as videorelease,channel_name as channelname from video
                 where extract(year from pub_date)=2022'''
     cursor.execute(query8)
+    
     t8=cursor.fetchall()
     df8=pd.DataFrame(t8,columns=["videotitle","published_date","channelname"])
     st.write(df8)
@@ -480,6 +507,7 @@ elif question=="8. videos published in the year of 2022":
 elif question=="9. average duration of all videos in each channel":
     query9='''select channel_name as channelname,AVG(duration) as averageduration from video group by channel_name'''
     cursor.execute(query9)
+    
     t9=cursor.fetchall()
     df9=pd.DataFrame(t9,columns=["channelname","averageduration"])
 
@@ -496,6 +524,7 @@ elif question=="10. videos with highest number of comments":
     query10='''select tittle as videotitle, channel_name as channelname,comments as comments from video where comments is
                 not null order by comments desc'''
     cursor.execute(query10)
+    
     t10=cursor.fetchall()
     df10=pd.DataFrame(t10,columns=["video title","channel name","comments"])
     st.write(df10)
