@@ -1,7 +1,7 @@
 # YouTube Data Harvesting and Warehousing using SQL and Streamlit
 
 ## Overview:
-This project is designed to extract data from YouTube channels using the YouTube API, process it, and store it for further analysis. The collected data is initially stored as documents in a MongoDB Atlas database and later transformed into SQL records for comprehensive data analysis. The core functionality of the project follows the Extract, Transform, Load (ETL) process. Key features of the project include:
+This project is designed to extract data from YouTube channels using the YouTube API, process it, and store it for further analysis. The collected data is initially stored as documents in a MongoDB Atlas database and later transformed into SQL records for comprehensive data analysis. The core functionality of the project follows the Extract, Transform, Load (ETL) process.
 
 ---
 
@@ -52,7 +52,7 @@ Install and import the necessary modules:
 
 ### Step 3: Run the Project with Streamlit
 
-To run the `YtAPiproject.py` using a virtual environment, follow these steps:
+To run the `python.py` using a virtual environment, follow these steps:
 
 1. Open the command prompt in the project directory.
   
